@@ -1,176 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Foundations of Proactive Agents — task capability, temporal allocation, and trust.">
-  <meta name="theme-color" content="#faf9f6">
+  <meta name="description" content="Foundations of Proactive Agents: principles, technical layers, and PROACTIVITY-GYM. Agent evaluation and a human study of useful proactive assistance.">
   <title>Foundations of Proactive Agents</title>
-  <style>
-    :root { --bg:#faf9f6; --ink:#242a30; --muted:#626a72; --line:#e2e3df; --accent:#496b81; --blue:#eaf0f5; --green:#edf2eb; --rose:#f6eeeb; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; scroll-padding-top:90px; }
-    body { margin:0; background:var(--bg); color:var(--ink); font-family:Arial,Helvetica,sans-serif; line-height:1.7; -webkit-font-smoothing:antialiased; }
-    a { color:var(--accent); text-decoration:none; }
-    a:hover { text-decoration:underline; }
-    a:focus-visible { outline:3px solid var(--accent); outline-offset:5px; }
-    .container { width:min(100% - 48px,1040px); margin-inline:auto; }
-    .skip { position:absolute; top:-80px; background:white; padding:10px; z-index:10; }
-    .skip:focus { top:8px; }
-    .nav { position:sticky; top:0; z-index:5; border-bottom:1px solid var(--line); background:rgba(250,249,246,.97); }
-    .nav-inner { display:flex; justify-content:space-between; align-items:center; gap:24px; min-height:66px; }
-    .brand { font-weight:700; color:var(--ink); font-size:14px; white-space:nowrap; }
-    .nav-links { display:flex; gap:24px; font-size:13px; }
-    .nav-links a { color:var(--muted); }
-    .hero { text-align:center; padding:76px 0 54px; }
-    .eyebrow { color:var(--accent); font-size:11px; font-weight:700; letter-spacing:2.2px; text-transform:uppercase; margin:0 0 20px; }
-    h1 { font-size:clamp(36px,5.3vw,60px); line-height:1.13; letter-spacing:-2.1px; margin:0 auto 22px; max-width:840px; font-weight:700; }
-    .subtitle { color:var(--muted); font-size:20px; line-height:1.5; margin:0 auto 30px; }
-    .authors { font-size:16px; margin:0 0 4px; }
-    .affiliations { color:var(--muted); font-size:13px; margin:0; }
-    .placeholder-text { color:var(--muted); }
-    .buttons { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:26px; }
-    .button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:8px 20px; border:1px solid var(--line); border-radius:6px; background:white; color:var(--ink); font-size:13px; font-weight:600; }
-    .button.primary { background:var(--ink); color:white; border-color:var(--ink); }
-    .button:hover { text-decoration:none; border-color:var(--accent); }
-    .button.unavailable { color:#777e83; background:#f0f0ed; cursor:default; }
-    .tldr { border-left:3px solid var(--accent); background:var(--blue); padding:20px 24px; margin-bottom:28px; border-radius:0 6px 6px 0; font-size:16px; }
-    .figure-placeholder { min-height:245px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:1px dashed #bdc6cc; background:linear-gradient(135deg,#f1f4f5,#f6f6f1); border-radius:8px; padding:32px; color:var(--muted); }
-    .figure-placeholder strong { font-size:18px; color:#596c79; font-weight:500; }
-    .figure-placeholder span { font-size:13px; margin-top:6px; }
-    figure { margin:0; }
-    figcaption { text-align:center; font-size:12px; color:var(--muted); margin:12px 0 0; }
-    section { padding:52px 0; border-bottom:1px solid var(--line); }
-    section h2 { font-size:28px; letter-spacing:-.7px; line-height:1.3; margin:0 0 20px; }
-    section p { margin:0 0 16px; }
-    section p:last-child { margin-bottom:0; }
-    .section-label { display:block; color:var(--accent); font-size:10px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; margin-bottom:10px; }
-    .text-width { max-width:820px; }
-    .news { display:flex; align-items:baseline; gap:22px; padding:17px 0; font-size:14px; border-bottom:1px solid var(--line); }
-    .news strong { font-size:12px; white-space:nowrap; color:var(--accent); }
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:26px; }
-    .card { border-radius:8px; padding:26px 24px; background:var(--blue); }
-    .card:nth-child(2) { background:var(--green); }
-    .card:nth-child(3) { background:var(--rose); }
-    .card .initials { display:block; font-size:11px; font-weight:bold; letter-spacing:1.5px; color:var(--muted); margin-bottom:18px; }
-    .card h3 { font-size:18px; line-height:1.35; margin:0 0 10px; letter-spacing:-.3px; }
-    .card p { font-size:14px; color:var(--muted); line-height:1.65; }
-    .section-intro { color:var(--muted); max-width:800px; }
-    .citation { border:1px solid var(--line); border-radius:8px; background:white; padding:24px; color:var(--muted); font-size:14px; }
-    footer { text-align:center; color:var(--muted); font-size:12px; padding:30px 0 40px; }
-    @media(max-width:700px) {
-      .container { width:calc(100% - 36px); }
-      .nav-inner { display:block; padding:12px 0 10px; }
-      .brand { display:block; margin-bottom:6px; }
-      .nav-links { gap:19px; overflow-x:auto; padding:2px 0; white-space:nowrap; }
-      .hero { padding:50px 0 38px; }
-      h1 { letter-spacing:-1.3px; }
-      .subtitle { font-size:17px; }
-      .cards { grid-template-columns:1fr; }
-      .card { padding:22px; }
-      .card .initials { margin-bottom:9px; }
-      section { padding:38px 0; }
-      .figure-placeholder { min-height:200px; }
-      .news { gap:14px; }
-    }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="content.js"></script>
+  <script defer src="app.js"></script>
 </head>
 <body>
-  <!-- 편집 안내: TODO를 검색해 저자, 링크, 초록, 그림, 결과, BibTeX를 교체하세요.
-       GitHub Pages: 이 파일을 저장소 최상위에 index.html로 올린 후
-       Settings > Pages > Deploy from a branch > main > /(root) > Save.
-       별도 설치나 빌드 없이 동작합니다. -->
   <a class="skip" href="#main">Skip to content</a>
-  <header class="nav">
-    <nav class="container nav-inner" aria-label="Main navigation">
-      <a class="brand" href="#top">Foundations of Proactive Agents</a>
-      <div class="nav-links">
-        <a href="#abstract">Abstract</a>
-        <a href="#framework">3T</a>
-        <a href="#gym">Gym</a>
-        <a href="#results">Results</a>
-        <a href="#bibtex">BibTeX</a>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main" class="container">
-    <div class="hero" id="top">
-      <p class="eyebrow">Research project</p>
-      <h1>Foundations of<br>Proactive Agents</h1>
-      <p class="subtitle">Task Capability · Temporal Allocation · Trust</p>
-      <!-- TODO: 전체 저자와 소속으로 교체 -->
-      <p class="authors placeholder-text">Author names to be added</p>
-      <p class="affiliations">Affiliations to be added</p>
-      <div class="buttons">
-        <!-- TODO: 논문 공개 후 아래 span을 <a class="button" href="논문 URL">Paper</a>로 교체 -->
-        <span class="button unavailable">Paper · Coming soon</span>
-        <a class="button primary" href="https://github.com/harryoh99/foundations_of_proactive_agents" target="_blank" rel="noopener noreferrer">Code ↗</a>
-        <a class="button" href="#bibtex">BibTeX ↓</a>
-      </div>
-    </div>
-
-    <div class="tldr"><strong>TL;DR</strong> — Proactive agents should reason about what work to perform, when to perform it, and how far to intervene.</div>
-    <figure>
-      <!-- TODO: 아래 div를 <img src="assets/overview.png" alt="연구 개요 설명" style="width:100%;height:auto">로 교체 -->
-      <div class="figure-placeholder"><strong>Overview figure</strong><span>Research overview / illustrative scenario</span></div>
-      <figcaption>Overview figure and caption to be added.</figcaption>
-    </figure>
-
-    <!-- TODO: 실제 공지로 교체하거나 news div 전체를 삭제 -->
-    <div class="news"><strong>NEWS</strong><span class="placeholder-text">Project updates coming soon.</span></div>
-
-    <section id="abstract">
-      <span class="section-label">01 / Abstract</span>
-      <h2>Assistance before users ask.</h2>
-      <div class="text-width">
-        <!-- TODO: 확정된 논문 초록으로 교체. 현재 문단은 페이지용 임시 소개문입니다. -->
-        <p>Proactive LLM agents can turn idle compute into useful support before users ask. Yet even correct work can misread user context, impose review costs, or undermine trust.</p>
-        <p>This project explores foundations for designing and evaluating proactive agents through three joint objectives: <strong>Task Capability</strong>, <strong>Temporal Allocation</strong>, and <strong>Trust</strong>.</p>
-      </div>
-    </section>
-
-    <section id="framework">
-      <span class="section-label">02 / The 3T objectives</span>
-      <h2>What, when, and how far?</h2>
-      <p class="section-intro">Three objectives for thinking about useful proactive assistance.</p>
-      <div class="cards">
-        <article class="card"><span class="initials">TC / WHAT</span><h3>Task Capability</h3><p>Anticipate relevant needs and correctly perform useful work.</p></article>
-        <article class="card"><span class="initials">TA / WHEN</span><h3>Temporal Allocation</h3><p>Allocate compute according to resource availability and when results are needed.</p></article>
-        <article class="card"><span class="initials">TR / HOW FAR</span><h3>Trust</h3><p>Sustain users’ confidence and appropriate reliance on the agent.</p></article>
-      </div>
-    </section>
-
-    <section id="gym">
-      <span class="section-label">03 / Evaluation environment</span>
-      <h2>Proactivity Gym</h2>
-      <p class="section-intro">An environment for studying proactive assistance as tasks, resources, deadlines, and user preferences change over time.</p>
-      <figure>
-        <!-- TODO: 환경 구조 그림 또는 데모 이미지로 교체 -->
-        <div class="figure-placeholder"><strong>Environment &amp; interaction flow</strong><span>Prepare · Suggest · Execute · No proactive action</span></div>
-        <figcaption>Environment diagram or demo to be added.</figcaption>
-      </figure>
-    </section>
-
-    <section id="results">
-      <span class="section-label">04 / Results</span>
-      <h2>Evaluating proactive assistance.</h2>
-      <p class="section-intro">Agent evaluation and human study results will be presented here.</p>
-      <figure>
-        <!-- TODO: 실제 결과 그림으로 교체 -->
-        <div class="figure-placeholder"><strong>Main results</strong><span>Benchmark results / human study</span></div>
-        <figcaption>Results figure and key findings to be added.</figcaption>
-      </figure>
-    </section>
-
-    <section id="bibtex">
-      <span class="section-label">05 / Citation</span>
-      <h2>BibTeX</h2>
-      <!-- TODO: 인용 정보 확정 후 <pre><code>실제 BibTeX</code></pre>로 교체 -->
-      <div class="citation">Citation details will be added when the paper is available.</div>
-    </section>
-  </main>
-  <footer class="container">Foundations of Proactive Agents · <a href="https://github.com/harryoh99/foundations_of_proactive_agents">GitHub</a></footer>
+  <div id="app"></div>
+  <noscript>This project page needs JavaScript to display its editable content. Please enable JavaScript.</noscript>
+  <dialog id="figure-dialog" aria-label="Enlarged paper figure">
+    <div class="dialog-bar"><span id="dialog-label">Paper figure</span><a id="original-image" target="_blank" rel="noopener">Open full image ↗</a><button id="close-dialog" type="button">Close ×</button></div>
+    <img id="dialog-image" alt="">
+    <p id="dialog-caption"></p>
+  </dialog>
 </body>
 </html>
